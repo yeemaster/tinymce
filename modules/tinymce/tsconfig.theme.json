@@ -4,7 +4,9 @@
     "paths": {
       "tinymce": ["src/core/dist/tinymce"],
       "tinymce/core/*": ["lib/globals/tinymce/core/*"],
-      "tinymce/themes/silver/*": ["src/themes/silver/main/ts/*"]
+      "tinymce/themes/silver/*": ["src/themes/silver/main/ts/*"],
+
+      "@ephox/wrap-mcagar": ["src/core/test/ts/module/McAgar"]
     }
   }
 }

@@ -14,13 +14,12 @@ import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import { SelectionTargets } from 'tinymce/models/dom/table/main/ts/selection/SelectionTargets';
 
 import * as Events from '../api/Events';
-import * as Options from '../api/Options';
+import { getCloneElements } from '../api/Settings';
 import * as Util from '../core/Util';
 import { ephemera } from './Ephemera';
-// import { SelectionTargets } from './SelectionTargets';
+import { SelectionTargets } from './SelectionTargets';
 
 const hasInternalTarget = (e: Event): boolean =>
   Class.has(SugarElement.fromDom(e.target as Node), 'ephox-snooker-resizer-bar') === false;
@@ -34,7 +33,7 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>, selecti
     selectionTargets.targets().each((targets) => {
       const tableOpt = TableLookup.table(start);
       tableOpt.each((table) => {
-        const cloneFormats = Options.getCloneElements(editor);
+        const cloneFormats = getCloneElements(editor);
         const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), cloneFormats);
         const otherCells = OtherCells.getOtherCells(table, targets, generators);
         Events.fireTableSelectionChange(editor, cells, start, finish, otherCells);

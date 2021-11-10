@@ -664,6 +664,33 @@ const register = (editor: Editor) => {
     processor: 'string'
   });
 
+  registerOption('table_clone_elements', {
+    processor: 'string[]'
+  });
+
+  registerOption('table_resize_bars', {
+    processor: 'boolean',
+    default: true
+  });
+
+  registerOption('table_tab_navigation', {
+    processor: 'boolean',
+    default: true
+  });
+
+  registerOption('table_sizing_mode', {
+    processor: 'string',
+    default: 'auto'
+  });
+
+  registerOption('table_column_resizing', {
+    processor: (value) => {
+      const valid = Arr.contains([ 'preservetable', 'resizetable' ], value);
+      return valid ? { value, valid } : { valid: false, message: 'Must be preservetable, or resizetable.' };
+    },
+    default: 'preservetable'
+  });
+
   // These options must be registered later in the init sequence due to their default values
   // TODO: TINY-8234 Should we have a way to lazily load the default values?
   editor.on('ScriptsLoaded', () => {
@@ -763,6 +790,25 @@ const isEncodingXml = (editor: Editor): boolean =>
 const hasForcedRootBlock = (editor: Editor): boolean =>
   getForcedRootBlock(editor) !== '';
 
+type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
+
+const getTableCloneElements = (editor: Editor): string[] =>
+  editor.options.get('table_clone_elements');
+const hasTableTabNavigation = option('table_tab_navigation');
+const getTableSizingMode = option<TableSizingMode>('table_sizing_mode');
+const getTableColumnResizingBehaviour = option<'preservetable' | 'resizetable'>('table_column_resizing');
+const hasTableObjectResizing = (editor: Editor): boolean => {
+  const objectResizing = editor.options.get('object_resizing');
+  return Arr.contains(objectResizing.split(','), 'table');
+};
+const hasTableResizeBars = option('table_resize_bars');
+const isTablePercentagesForced = (editor: Editor): boolean =>
+  getTableSizingMode(editor) === 'relative';
+const isTablePixelsForced = (editor: Editor): boolean =>
+  getTableSizingMode(editor) === 'fixed';
+const isTableResponsiveForced = (editor: Editor): boolean =>
+  getTableSizingMode(editor) === 'responsive';
+
 export {
   register,
 
@@ -839,5 +885,13 @@ export {
   getAutoFocus,
   shouldBrowserSpellcheck,
   getProtect,
-  getContentEditableState
+  getContentEditableState,
+  hasTableTabNavigation,
+  getTableCloneElements,
+  hasTableObjectResizing,
+  hasTableResizeBars,
+  getTableColumnResizingBehaviour,
+  isTablePercentagesForced,
+  isTablePixelsForced,
+  isTableResponsiveForced
 };

@@ -15,22 +15,22 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-import * as Events from '../api/Events';
-import { getCloneElements } from '../api/Settings';
-import * as Util from '../core/Util';
-import { ephemera } from './Ephemera';
+import { ephemera } from '../../table/TableEphemera';
+import * as Events from '../../table/TableEvents';
+import * as Util from '../../table/TableUtil';
+import { getTableCloneElements } from '../Settings';
 // import { SelectionTargets } from './SelectionTargets';
 
 const hasInternalTarget = (e: Event): boolean =>
   Class.has(SugarElement.fromDom(e.target as Node), 'ephox-snooker-resizer-bar') === false;
 
-export interface CellSelectionApi {
+export interface TableCellSelectionApi {
   readonly clear: (container: SugarElement<Node>) => void;
 }
 
 // export default (editor: Editor, selectionTargets: SelectionTargets): CellSelectionApi => {
 // export default (editor: Editor): CellSelectionApi => {
-export default (editor: Editor, lazyResize: () => Optional<TableResize>): CellSelectionApi => {
+export default (editor: Editor, lazyResize: () => Optional<TableResize>): TableCellSelectionApi => {
   // const onSelection = (cells: SugarElement<HTMLTableCellElement>[], start: SugarElement<HTMLTableCellElement>, finish: SugarElement<HTMLTableCellElement>) => {
   //   // TODO: We might not need selectionTargets and can just get the selected cells straight from the editor
   //   // TODO: Check this was triggered even with a collapsed selection in a cell
@@ -48,7 +48,7 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>): CellSe
   const onSelection = (cells: SugarElement<HTMLTableCellElement>[], start: SugarElement<HTMLTableCellElement>, finish: SugarElement<HTMLTableCellElement>) => {
     const tableOpt = TableLookup.table(start);
     tableOpt.each((table) => {
-      const cloneFormats = getCloneElements(editor);
+      const cloneFormats = getTableCloneElements(editor);
       const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), cloneFormats);
 
       const selectedCells = Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);

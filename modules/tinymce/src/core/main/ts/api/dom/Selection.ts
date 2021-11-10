@@ -25,8 +25,8 @@ import * as NormalizeRange from '../../selection/NormalizeRange';
 import * as SelectionBookmark from '../../selection/SelectionBookmark';
 import { hasAnyRanges, moveEndPoint } from '../../selection/SelectionUtils';
 import * as SetSelectionContent from '../../selection/SetSelectionContent';
-import { ephemera as cellEphemera } from '../../selection/TableEphemera';
-import * as TableSelection from '../../selection/TableSelection';
+import { ephemera as cellEphemera } from '../../table/TableEphemera';
+import * as TableSelection from '../../table/TableSelection';
 import Editor from '../Editor';
 import Env from '../Env';
 import AstNode from '../html/Node';
@@ -35,6 +35,8 @@ import ControlSelection from './ControlSelection';
 import DOMUtils from './DOMUtils';
 import SelectorChanged from './SelectorChanged';
 import DomSerializer from './Serializer';
+import TableCellSelection, { TableCellSelectionApi } from './TableCellSelection';
+// import { TableResizeHandler } from './TableResizeHandler';
 
 /**
  * This class handles text and control selection it's an crossbrowser utility class.
@@ -65,6 +67,8 @@ const isValidRange = (rng: Range) => {
 interface EditorSelection {
   bookmarkManager: BookmarkManager;
   controlSelection: ControlSelection;
+  // tableResizeHandler: TableResizeHandler;
+  tableCellSelection: TableCellSelectionApi;
   dom: DOMUtils;
   win: Window;
   serializer: DomSerializer;
@@ -597,11 +601,14 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   const destroy = () => {
     win = selectedRange = explicitRange = null;
     controlSelection.destroy();
+    // tableResizeHandler.destroy();
   };
 
   const exports: EditorSelection = {
     bookmarkManager: null,
     controlSelection: null,
+    // tableResizeHandler: null,
+    tableCellSelection: null,
     dom,
     win,
     serializer,
@@ -636,9 +643,13 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
 
   const bookmarkManager = BookmarkManager(exports);
   const controlSelection = ControlSelection(exports, editor);
+  // const tableResizeHandler = TableResizeHandler(editor);
+  const tableCellSelection = TableCellSelection(editor, editor.model.table.resizeHandler.lazyResize);
 
   exports.bookmarkManager = bookmarkManager;
   exports.controlSelection = controlSelection;
+  // exports.tableResizeHandler = tableResizeHandler;
+  exports.tableCellSelection = tableCellSelection;
 
   return exports;
 };

@@ -18,7 +18,7 @@ import * as HomeEndKeys from './HomeEndKeys';
 import * as InputKeys from './InputKeys';
 import * as PageUpDownKeys from './PageUpDownKeys';
 import * as SpaceKey from './SpaceKey';
-// import * as TabKey from './TabKey';
+import * as TabKey from './TabKey';
 
 const registerKeyboardOverrides = (editor: Editor) => {
   const caret = BoundarySelection.setupSelectedState(editor);
@@ -29,7 +29,7 @@ const registerKeyboardOverrides = (editor: Editor) => {
   EnterKey.setup(editor);
   SpaceKey.setup(editor);
   InputKeys.setup(editor);
-  // TabKey.setup(editor);
+  TabKey.setup(editor);
   HomeEndKeys.setup(editor, caret);
   PageUpDownKeys.setup(editor, caret);
 

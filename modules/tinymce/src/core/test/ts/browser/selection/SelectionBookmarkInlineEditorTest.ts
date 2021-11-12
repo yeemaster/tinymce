@@ -135,7 +135,8 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
 
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
       TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1, false);
-      editor.fire('touchend', { } as TouchEvent);
+      // Provide an actual element target
+      editor.fire('touchend', { target: editor.getBody() as EventTarget } as TouchEvent);
       return pWaitForBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
     });
 

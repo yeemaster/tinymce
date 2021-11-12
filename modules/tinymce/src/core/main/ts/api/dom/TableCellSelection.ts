@@ -19,7 +19,6 @@ import { ephemera } from '../../table/TableEphemera';
 import * as Events from '../../table/TableEvents';
 import * as Util from '../../table/TableUtil';
 import { getTableCloneElements } from '../Settings';
-// import { SelectionTargets } from './SelectionTargets';
 
 const hasInternalTarget = (e: Event): boolean =>
   Class.has(SugarElement.fromDom(e.target as Node), 'ephox-snooker-resizer-bar') === false;
@@ -28,22 +27,7 @@ export interface TableCellSelectionApi {
   readonly clear: (container: SugarElement<Node>) => void;
 }
 
-// export default (editor: Editor, selectionTargets: SelectionTargets): CellSelectionApi => {
 export default (editor: Editor, lazyResize: () => Optional<TableResize>): TableCellSelectionApi => {
-  // const onSelection = (cells: SugarElement<HTMLTableCellElement>[], start: SugarElement<HTMLTableCellElement>, finish: SugarElement<HTMLTableCellElement>) => {
-  //   // TODO: We might not need selectionTargets and can just get the selected cells straight from the editor
-  //   // TODO: Check this was triggered even with a collapsed selection in a cell
-  //   selectionTargets.targets().each((targets) => {
-  //     const tableOpt = TableLookup.table(start);
-  //     tableOpt.each((table) => {
-  //       const cloneFormats = getCloneElements(editor);
-  //       const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), cloneFormats);
-  //       const otherCells = OtherCells.getOtherCells(table, targets, generators);
-  //       Events.fireTableSelectionChange(editor, cells, start, finish, otherCells);
-  //     });
-  //   });
-  // };
-
   const onSelection = (cells: SugarElement<HTMLTableCellElement>[], start: SugarElement<HTMLTableCellElement>, finish: SugarElement<HTMLTableCellElement>) => {
     const tableOpt = TableLookup.table(start);
     tableOpt.each((table) => {
@@ -175,7 +159,6 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>): TableC
       const lastTimeStamp = Cell<number>(0);
 
       const touchEnd = (t: TouchEvent) => {
-        console.log(t);
         const target = SugarElement.fromDom(t.target as Node);
         if (SugarNode.name(target) === 'td' || SugarNode.name(target) === 'th') {
           const lT = lastTarget.get();

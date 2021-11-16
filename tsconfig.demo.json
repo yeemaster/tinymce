@@ -1,37 +1,13 @@
 {
-  "extends": "./tsconfig.shared.json",
-
-  // Compile nothing here but instead let it be compiled by the project references
-  "files": [],
-  "references": [
-    { "path": "modules/acid" },
-    { "path": "modules/agar" },
-    { "path": "modules/alloy" },
-    { "path": "modules/boss" },
-    { "path": "modules/boulder" },
-    { "path": "modules/bridge" },
-    { "path": "modules/darwin" },
-    { "path": "modules/dragster" },
-    { "path": "modules/imagetools" },
-    { "path": "modules/katamari" },
-    { "path": "modules/katamari-assertions" },
-    { "path": "modules/mcagar" },
-    { "path": "modules/phoenix" },
-    { "path": "modules/polaris" },
-    { "path": "modules/porkbun" },
-    { "path": "modules/robin" },
-    { "path": "modules/sand" },
-    { "path": "modules/snooker" },
-    { "path": "modules/sugar" },
-    { "path": "modules/tinymce" }
-  ],
+  "extends": "./tsconfig.json",
 
   "compilerOptions": {
     "paths": {
-      // duplicate paths, copied from each individual tsconfig.json
-      // once there is a webpack path plugin that supports project references this can be deleted
-      "tinymce": ["modules/tinymce/src/core/main/ts/api/Main"],
-      "tinymce/core/*": ["modules/tinymce/src/core/main/ts/*"],
+      // duplicate paths, copied from tsconfig.json
+      // the exception is the tinymce core paths which point to the lib directories
+      // once there is a webpack path plugin that supports project references most of this can be deleted
+      "tinymce": ["modules/tinymce/lib/core/main/ts/api/Main"],
+      "tinymce/core/*": ["modules/tinymce/lib/globals/tinymce/core/*"],
       "tinymce/themes/silver/demo/*": ["modules/tinymce/src/themes/silver/demo/ts/*"],
       "tinymce/themes/silver/*": ["modules/tinymce/src/themes/silver/main/ts/*"],
       "tinymce/plugins/advlist/*": ["modules/tinymce/src/plugins/advlist/main/ts/*"],

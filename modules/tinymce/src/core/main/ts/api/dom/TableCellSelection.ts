@@ -11,14 +11,13 @@ import { DomParent } from '@ephox/robin';
 import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';
 import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode, Direction } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-
 import { ephemera } from '../../table/TableEphemera';
 import * as Events from '../../table/TableEvents';
 import * as Util from '../../table/TableUtil';
+import Editor from '../Editor';
+import Env from '../Env';
 import { getTableCloneElements } from '../Settings';
+import { EditorEvent } from '../util/EventDispatcher';
 
 const hasInternalTarget = (e: Event): boolean =>
   Class.has(SugarElement.fromDom(e.target as Node), 'ephox-snooker-resizer-bar') === false;

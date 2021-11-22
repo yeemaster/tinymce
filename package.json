@@ -48,7 +48,7 @@
     "emojilib": "^2.4.0",
     "eslint": "^7.0.0",
     "eslint-plugin-notice": "^0.9.10",
-    "fast-check": "^1.18.1",
+    "fast-check": "^2.19.0",
     "fork-ts-checker-webpack-plugin": "^6.3.2",
     "grunt": "^1.0.2",
     "grunt-contrib-clean": "^2.0.0",

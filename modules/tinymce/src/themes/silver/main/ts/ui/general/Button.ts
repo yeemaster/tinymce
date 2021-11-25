@@ -92,7 +92,8 @@ export const renderButtonSpec = (spec: ButtonSpec, action: Optional<(comp: Alloy
   };
 
   const classes = [
-    ...!spec.primary && !spec.borderless ? [ 'tox-button', 'tox-button--secondary' ] : [ 'tox-button' ],
+    // eslint-disable-next-line no-nested-ternary
+    ...spec.toolbar ? [ 'tox-tbtn' ] : !spec.primary && !spec.borderless ? [ 'tox-button', 'tox-button--secondary' ] : [ 'tox-button' ],
     ...icon.isSome() ? [ 'tox-button--icon' ] : [],
     ...spec.borderless ? [ 'tox-button--naked' ] : [],
     ...extraClasses

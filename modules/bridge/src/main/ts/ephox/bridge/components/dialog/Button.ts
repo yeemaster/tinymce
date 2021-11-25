@@ -9,6 +9,7 @@ export interface ButtonSpec {
   name?: string;
   icon?: string;
   borderless?: boolean;
+  toolbar?: boolean;
 }
 
 export interface Button {
@@ -19,6 +20,7 @@ export interface Button {
   name: string;
   icon: Optional<string>;
   borderless: boolean;
+  toolbar?: boolean;
 }
 
 const buttonFields = [
@@ -26,6 +28,7 @@ const buttonFields = [
   FieldSchema.requiredString('text'),
   FieldSchema.defaultedBoolean('disabled', false),
   FieldSchema.defaultedBoolean('primary', false),
+  FieldSchema.defaultedBoolean('toolbar', false),
   FieldSchema.field(
     'name',
     'name',

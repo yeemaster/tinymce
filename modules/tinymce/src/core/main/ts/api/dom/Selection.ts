@@ -6,7 +6,7 @@
  */
 
 import { Selections } from '@ephox/darwin';
-import { Arr, Fun, Type } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
 
 import { Bookmark } from '../../bookmark/BookmarkTypes';
@@ -115,16 +115,6 @@ interface EditorSelection {
   destroy: () => void;
 }
 
-export interface PatchedSelections {
-  readonly get: () => HTMLTableCellElement[];
-}
-
-const patchSelections = (selections: Selections): PatchedSelections => {
-  return {
-    get: () => selections.get().fold(Fun.constant([]), (cells) => Arr.map(cells, (cell) => cell.dom), (cell) => [ cell.dom ])
-  };
-};
-
 const isRoot = (editor: Editor) => (element: SugarElement<Node>): boolean =>
   Compare.eq(element, SugarElement.fromDom(editor.getBody()));
 
@@ -142,12 +132,14 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   let selectedRange: Range | null;
   let explicitRange: Range | null;
 
-  const oldCellSelection = Selections(
+  const cellSelection = Selections(
     () => SugarElement.fromDom(editor.getBody()),
     () => TableSelection.getSelectionCell(SugarElement.fromDom(getStart()), isRoot(editor)),
     cellEphemera.selectedSelector
   );
-  const cellSelection = patchSelections(oldCellSelection);
+
+  const tableResizeHandler = TableResizeHandler(editor);
+  const tableCellSelection = TableCellSelection(editor);
 
   const { selectorChangedWithUnbind } = SelectorChanged(dom, editor);
 
@@ -524,7 +516,8 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     return anchorRange.compareBoundaryPoints(anchorRange.START_TO_START, focusRange) <= 0;
   };
 
-  const getSelectedCells = cellSelection.get;
+  const getSelectedCells = () =>
+    Arr.map(cellSelection.get(), (cell) => cell.dom);
 
   const normalize = (): Range => {
     const rng = getRng();
@@ -596,8 +589,8 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   const exports: EditorSelection = {
     bookmarkManager: null,
     controlSelection: null,
-    tableResizeHandler: null,
-    tableCellSelection: null,
+    tableResizeHandler,
+    tableCellSelection,
     dom,
     win,
     serializer,
@@ -632,13 +625,9 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
 
   const bookmarkManager = BookmarkManager(exports);
   const controlSelection = ControlSelection(exports, editor);
-  const tableResizeHandler = TableResizeHandler(editor);
-  const tableCellSelection = TableCellSelection(editor);
 
   exports.bookmarkManager = bookmarkManager;
   exports.controlSelection = controlSelection;
-  exports.tableResizeHandler = tableResizeHandler;
-  exports.tableCellSelection = tableCellSelection;
 
   return exports;
 };
